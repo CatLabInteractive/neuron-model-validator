@@ -14,6 +14,7 @@ class Validator {
 	/**
 	 * Set up a validation environment based on swagger documentation.
 	 * @param $path
+	 * @return \CatLab\Validator\Validator
 	 */
 	public static function fromSwagger ($path)
 	{
@@ -25,6 +26,8 @@ class Validator {
 
 		// Run the importer
 		$importer->run ($validator);
+
+		return $validator;
 	}
 
 	/** @var Error[] $errors */

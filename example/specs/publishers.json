@@ -1,0 +1,411 @@
+{
+    "swaggerVersion": "1.2",
+    "apiVersion": "1.0",
+    "resourcePath": "/publishers",
+    "apis": [
+        {
+            "path": "/publishers",
+            "description": "Operations on publishers",
+            "operations": [
+                {
+                    "method": "GET",
+                    "summary": "Return all publisher with provided ids.",
+                    "nickname": "getMultiple",
+                    "type": "PublisherCollection",
+                    "parameters": [
+                        {
+                            "paramType": "query",
+                            "name": "ids",
+                            "type": "integer",
+                            "required": true,
+                            "description": "Publisher IDs, comma seperated"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path": "/publishers/{id}",
+            "description": "Operations on publishers",
+            "operations": [
+                {
+                    "method": "GET",
+                    "summary": "Return publisher with provided id.",
+                    "nickname": "get",
+                    "type": "PublisherOutput",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "id",
+                            "type": "integer",
+                            "required": true,
+                            "description": "Publisher ID"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path": "/publishers/{id}/entries",
+            "description": "Operations on publishers",
+            "operations": [
+                {
+                    "method": "GET",
+                    "summary": "Return all entries created by the publisher.",
+                    "nickname": "get",
+                    "type": "EntryCollection",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "id",
+                            "type": "integer",
+                            "required": true,
+                            "description": "Publisher ID"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path": "/publishers/{id}/packs",
+            "description": "Operations on publishers",
+            "operations": [
+                {
+                    "method": "GET",
+                    "summary": "Return all packs created by the publisher.",
+                    "nickname": "get",
+                    "type": "PackCollection",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "id",
+                            "type": "integer",
+                            "required": true,
+                            "description": "Publisher ID"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path": "/publishers/{id}/quizzes",
+            "description": "Operations on publishers",
+            "operations": [
+                {
+                    "method": "GET",
+                    "summary": "Return all quizzes created by the publisher.",
+                    "nickname": "get",
+                    "type": "QuizCollection",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "id",
+                            "type": "integer",
+                            "required": true,
+                            "description": "Publisher ID"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path": "/publishers/{id}/rounds",
+            "description": "Operations on publishers",
+            "operations": [
+                {
+                    "method": "GET",
+                    "summary": "Return all rounds created by the publisher.",
+                    "nickname": "get",
+                    "type": "RoundCollection",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "id",
+                            "type": "integer",
+                            "required": true,
+                            "description": "Publisher ID"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "models": {
+        "PublisherCollection": {
+            "id": "PublisherCollection",
+            "description": "Class PublisherCollection",
+            "required": [
+                "data"
+            ],
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "PublisherBase"
+                    }
+                }
+            }
+        },
+        "PublisherOutput": {
+            "id": "PublisherOutput",
+            "properties": {
+                "publisher": {
+                    "$ref": "Publisher"
+                }
+            }
+        },
+        "Publisher": {
+            "id": "Publisher",
+            "description": "Class Publisher",
+            "required": [
+                "age",
+                "avatar",
+                "id",
+                "name"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "avatar": {
+                    "type": "string"
+                },
+                "location": {
+                    "type": "string"
+                },
+                "statistics": {
+                    "$ref": null
+                },
+                "age": {
+                    "type": "integer"
+                }
+            }
+        },
+        "EntryCollection": {
+            "id": "EntryCollection",
+            "description": "Class EntryCollection",
+            "required": [
+                "data",
+                "pagination"
+            ],
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "EntryBase"
+                    }
+                },
+                "pagination": {
+                    "$ref": "Pagination"
+                }
+            }
+        },
+        "Pagination": {
+            "id": "Pagination",
+            "description": "Class Pagination",
+            "properties": {
+                "cursors": {
+                    "$ref": "PaginationCursors"
+                },
+                "next": {
+                    "type": "string"
+                },
+                "previous": {
+                    "type": "string"
+                }
+            }
+        },
+        "PaginationCursors": {
+            "id": "PaginationCursors",
+            "required": [
+                "after",
+                "before"
+            ],
+            "properties": {
+                "after": {
+                    "type": "string"
+                },
+                "before": {
+                    "type": "string"
+                }
+            }
+        },
+        "QuizCollection": {
+            "id": "QuizCollection",
+            "description": "Class QuizCollection",
+            "required": [
+                "data",
+                "pagination"
+            ],
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "QuizBase"
+                    }
+                },
+                "pagination": {
+                    "$ref": "Pagination"
+                }
+            }
+        },
+        "QuizBase": {
+            "id": "QuizBase",
+            "description": "Class Quiz",
+            "required": [
+                "id",
+                "name",
+                "owner",
+                "type"
+            ],
+            "properties": {
+                "statistics": {
+                    "$ref": "QuizStatistics"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "quiz",
+                        "pack",
+                        "round"
+                    ]
+                },
+                "name": {
+                    "type": "string"
+                },
+                "owner": {
+                    "$ref": "Publisher"
+                }
+            }
+        },
+        "QuizStatistics": {
+            "id": "QuizStatistics",
+            "description": "Class QuizStatistics",
+            "properties": [
+
+            ]
+        },
+        "RoundCollection": {
+            "id": "RoundCollection",
+            "description": "Class RoundCollection",
+            "required": [
+                "data",
+                "pagination"
+            ],
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "RoundBase"
+                    }
+                },
+                "pagination": {
+                    "$ref": "Pagination"
+                }
+            }
+        },
+        "RoundBase": {
+            "id": "RoundBase",
+            "description": "Class Round",
+            "required": [
+                "id",
+                "name",
+                "owner",
+                "type"
+            ],
+            "properties": {
+                "statistics": {
+                    "$ref": "RoundStatistics"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "quiz",
+                        "pack",
+                        "round"
+                    ]
+                },
+                "name": {
+                    "type": "string"
+                },
+                "owner": {
+                    "$ref": "Publisher"
+                }
+            }
+        },
+        "RoundStatistics": {
+            "id": "RoundStatistics",
+            "description": "Class RoundStatistics",
+            "properties": [
+
+            ]
+        },
+        "PackCollection": {
+            "id": "PackCollection",
+            "description": "Class PackCollection",
+            "required": [
+                "data",
+                "pagination"
+            ],
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "PackBase"
+                    }
+                },
+                "pagination": {
+                    "$ref": "Pagination"
+                }
+            }
+        },
+        "PackBase": {
+            "id": "PackBase",
+            "description": "Class Pack",
+            "required": [
+                "id",
+                "name",
+                "owner",
+                "type"
+            ],
+            "properties": {
+                "statistics": {
+                    "$ref": "PackStatistics"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "quiz",
+                        "pack",
+                        "round"
+                    ]
+                },
+                "name": {
+                    "type": "string"
+                },
+                "owner": {
+                    "$ref": "Publisher"
+                }
+            }
+        },
+        "PackStatistics": {
+            "id": "PackStatistics",
+            "description": "Class PackStatistics",
+            "properties": [
+
+            ]
+        }
+    }
+}

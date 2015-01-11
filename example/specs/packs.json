@@ -1,0 +1,195 @@
+{
+    "swaggerVersion": "1.2",
+    "apiVersion": "1.0",
+    "resourcePath": "/packs",
+    "apis": [
+        {
+            "path": "/packs/{id}",
+            "description": "Operations on packs",
+            "operations": [
+                {
+                    "method": "GET",
+                    "summary": "Return a pack",
+                    "nickname": "get",
+                    "type": "PackBaseOutput",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "id",
+                            "type": "integer",
+                            "required": true,
+                            "description": "Pack ID"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path": "/packs/{id}/comments",
+            "description": "Operations on packs",
+            "operations": [
+                {
+                    "method": "GET",
+                    "summary": "Return all comments on a pack",
+                    "nickname": "get",
+                    "type": "CommentCollection",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "id",
+                            "type": "integer",
+                            "required": true,
+                            "description": "Pack ID"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "models": {
+        "PackBaseOutput": {
+            "id": "PackBaseOutput",
+            "required": [
+                "pack"
+            ],
+            "properties": {
+                "pack": {
+                    "$ref": "PackBase"
+                }
+            }
+        },
+        "PackBase": {
+            "id": "PackBase",
+            "description": "Class Pack",
+            "required": [
+                "id",
+                "name",
+                "owner",
+                "type"
+            ],
+            "properties": {
+                "statistics": {
+                    "$ref": "PackStatistics"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "quiz",
+                        "pack",
+                        "round"
+                    ]
+                },
+                "name": {
+                    "type": "string"
+                },
+                "owner": {
+                    "$ref": "Publisher"
+                }
+            }
+        },
+        "PackStatistics": {
+            "id": "PackStatistics",
+            "description": "Class PackStatistics",
+            "properties": [
+
+            ]
+        },
+        "Publisher": {
+            "id": "Publisher",
+            "description": "Class Publisher",
+            "required": [
+                "age",
+                "avatar",
+                "id",
+                "name"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "avatar": {
+                    "type": "string"
+                },
+                "location": {
+                    "type": "string"
+                },
+                "statistics": {
+                    "$ref": null
+                },
+                "age": {
+                    "type": "integer"
+                }
+            }
+        },
+        "CommentCollection": {
+            "id": "CommentCollection",
+            "description": "Class CommentCollection",
+            "required": [
+                "data",
+                "pagination"
+            ],
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "Comment"
+                    }
+                },
+                "pagination": {
+                    "$ref": "Pagination"
+                }
+            }
+        },
+        "Comment": {
+            "id": "Comment",
+            "description": "Class Comment",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "text": {
+                    "type": "string"
+                },
+                "publisher": {
+                    "$ref": "Publisher"
+                }
+            }
+        },
+        "Pagination": {
+            "id": "Pagination",
+            "description": "Class Pagination",
+            "properties": {
+                "cursors": {
+                    "$ref": "PaginationCursors"
+                },
+                "next": {
+                    "type": "string"
+                },
+                "previous": {
+                    "type": "string"
+                }
+            }
+        },
+        "PaginationCursors": {
+            "id": "PaginationCursors",
+            "required": [
+                "after",
+                "before"
+            ],
+            "properties": {
+                "after": {
+                    "type": "string"
+                },
+                "before": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

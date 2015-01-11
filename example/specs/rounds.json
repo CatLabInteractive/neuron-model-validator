@@ -1,0 +1,195 @@
+{
+    "swaggerVersion": "1.2",
+    "apiVersion": "1.0",
+    "resourcePath": "/rounds",
+    "apis": [
+        {
+            "path": "/rounds/{id}",
+            "description": "Operations on rounds",
+            "operations": [
+                {
+                    "method": "GET",
+                    "summary": "Return a round",
+                    "nickname": "get",
+                    "type": "RoundBaseOutput",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "id",
+                            "type": "integer",
+                            "required": true,
+                            "description": "Round ID"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "path": "/rounds/{id}/comments",
+            "description": "Operations on rounds",
+            "operations": [
+                {
+                    "method": "GET",
+                    "summary": "Return all comments on a round",
+                    "nickname": "get",
+                    "type": "CommentCollection",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "id",
+                            "type": "integer",
+                            "required": true,
+                            "description": "Round ID"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "models": {
+        "RoundBaseOutput": {
+            "id": "RoundBaseOutput",
+            "required": [
+                "round"
+            ],
+            "properties": {
+                "round": {
+                    "$ref": "RoundBase"
+                }
+            }
+        },
+        "RoundBase": {
+            "id": "RoundBase",
+            "description": "Class Round",
+            "required": [
+                "id",
+                "name",
+                "owner",
+                "type"
+            ],
+            "properties": {
+                "statistics": {
+                    "$ref": "RoundStatistics"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "quiz",
+                        "pack",
+                        "round"
+                    ]
+                },
+                "name": {
+                    "type": "string"
+                },
+                "owner": {
+                    "$ref": "Publisher"
+                }
+            }
+        },
+        "RoundStatistics": {
+            "id": "RoundStatistics",
+            "description": "Class RoundStatistics",
+            "properties": [
+
+            ]
+        },
+        "Publisher": {
+            "id": "Publisher",
+            "description": "Class Publisher",
+            "required": [
+                "age",
+                "avatar",
+                "id",
+                "name"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "avatar": {
+                    "type": "string"
+                },
+                "location": {
+                    "type": "string"
+                },
+                "statistics": {
+                    "$ref": null
+                },
+                "age": {
+                    "type": "integer"
+                }
+            }
+        },
+        "CommentCollection": {
+            "id": "CommentCollection",
+            "description": "Class CommentCollection",
+            "required": [
+                "data",
+                "pagination"
+            ],
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "Comment"
+                    }
+                },
+                "pagination": {
+                    "$ref": "Pagination"
+                }
+            }
+        },
+        "Comment": {
+            "id": "Comment",
+            "description": "Class Comment",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "text": {
+                    "type": "string"
+                },
+                "publisher": {
+                    "$ref": "Publisher"
+                }
+            }
+        },
+        "Pagination": {
+            "id": "Pagination",
+            "description": "Class Pagination",
+            "properties": {
+                "cursors": {
+                    "$ref": "PaginationCursors"
+                },
+                "next": {
+                    "type": "string"
+                },
+                "previous": {
+                    "type": "string"
+                }
+            }
+        },
+        "PaginationCursors": {
+            "id": "PaginationCursors",
+            "required": [
+                "after",
+                "before"
+            ],
+            "properties": {
+                "after": {
+                    "type": "string"
+                },
+                "before": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

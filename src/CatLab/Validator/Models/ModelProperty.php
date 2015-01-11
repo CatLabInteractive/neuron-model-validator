@@ -17,10 +17,14 @@ class ModelProperty
 	/** @var Model $model */
 	private $model;
 
-	public function __construct (Model $model)
+	public function __construct (Model $model, $name = null)
 	{
 		$this->model = $model;
-		parent::__construct ($model->getName ());
+
+		if (!isset ($name))
+			$name = $model->getName ();
+
+		parent::__construct ($name);
 	}
 
 	public function setErrors (ErrorCollection $errors)

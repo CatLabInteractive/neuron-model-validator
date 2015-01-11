@@ -1,0 +1,62 @@
+{
+    "swaggerVersion": "1.2",
+    "apiVersion": "1.0",
+    "resourcePath": "/users",
+    "apis": [
+        {
+            "path": "/users/{id}",
+            "description": "Operations on users",
+            "operations": [
+                {
+                    "method": "GET",
+                    "summary": "Return user with provided id.",
+                    "nickname": "get",
+                    "type": "UserOutput",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "id",
+                            "type": "string",
+                            "required": true,
+                            "description": "User ID, use 'me' to get the authenticated user.",
+                            "defaultValue": "me"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "models": {
+        "UserOutput": {
+            "id": "UserOutput",
+            "required": [
+                "user"
+            ],
+            "properties": {
+                "user": {
+                    "$ref": "User"
+                }
+            }
+        },
+        "User": {
+            "id": "User",
+            "description": "Class User",
+            "required": [
+                "avatar",
+                "id",
+                "username"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "username": {
+                    "type": "string"
+                },
+                "avatar": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,26 @@
+{
+    "apiVersion": "1.0",
+    "swaggerVersion": "1.2",
+    "apis": [
+        {
+            "path": "/packs.{format}",
+            "description": "Operations on packs"
+        },
+        {
+            "path": "/publishers.{format}",
+            "description": "Operations on publishers"
+        },
+        {
+            "path": "/quizzes.{format}",
+            "description": "Operations on quizzes"
+        },
+        {
+            "path": "/rounds.{format}",
+            "description": "Operations on rounds"
+        },
+        {
+            "path": "/users.{format}",
+            "description": "Operations on users"
+        }
+    ]
+}

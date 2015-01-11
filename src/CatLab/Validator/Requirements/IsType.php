@@ -1,6 +1,9 @@
 <?php
 namespace CatLab\Validator\Requirements;
 
+use CatLab\Validator\Models\Model;
+use CatLab\Validator\Models\Property;
+
 class IsType
 	extends Requirement {
 
@@ -83,7 +86,7 @@ class IsType
 			return is_numeric ($value);
 		}
 
-		elseif ($type == 'int')
+		elseif ($type == 'int' || $type == 'integer')
 		{
 			return is_numeric ($value) && (int)$value == $value;
 		}
@@ -114,4 +117,12 @@ class IsType
 		return self::checkInput ($value, $this->type);
 	}
 
+	public function getError (Model $model, Property $property)
+	{
+		$error = parent::getError ($model, $property);
+
+		$error .= ' (' . $this->type . ')';
+
+		return $error;
+	}
 }
