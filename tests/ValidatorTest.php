@@ -18,9 +18,9 @@ class ValidatorTest
 		$validator = new Validator ();
 
 		$model = new Model ('testModel');
+		$validator->addModel ($model);
 
-
-		$this->assertEquals (true, $validator->validate ($model, $input));
+		$this->assertEquals (true, $validator->validate ('testModel', $input));
 	}
 
 }
