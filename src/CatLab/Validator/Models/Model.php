@@ -1,5 +1,7 @@
 <?php
 
+namespace CatLab\Validator\Models;
+
 class Model {
 
 	public static function make ($name, $properties)

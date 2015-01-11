@@ -1,5 +1,5 @@
 <?php
-
+namespace CatLab\Validator;
 
 class Validator {
 
