@@ -4,7 +4,7 @@ A php input validator that can handle Swagger V1 specs.
 Example usage:
 -------------
 ```php
-$validator = Validator::fromSwagger ('specs/');
+$validator = \CatLab\Validator\Validator::fromSwagger ('specs/');
 
 $input = array ('id' => 1, 'name' => 'Example');
 
