@@ -1,0 +1,22 @@
+{
+  "name": "catlabinteractive/validator",
+  "type": "library",
+  "description": "A php input validator that can handle Swagger V1 specs.",
+  "keywords": ["framework"],
+  "homepage":"http://github.com/catlabinteractive/validator",
+  "license": "MIT",
+  "authors" : [
+	{
+	  "name": "Thijs Van der Schaeghe",
+	  "email" : "info@catlab.be",
+	  "homepage" : "https://www.catlab.eu/",
+	  "role" : "Developer"
+	}
+  ],
+
+  "autoload": {
+	"psr-4" : {
+	  "CatLab\\Validator\\" : "src/CatLab/Validator"
+	}
+  }
+}
