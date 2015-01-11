@@ -69,6 +69,7 @@ class ValidatorTest
 		$userModel->addProperty ($property);
 
 		$property = new ModelProperty ($userModel);
+		$property->addRequirement (new Exists ());
 		$model->addProperty ($property);
 
 		$this->assertEquals (true, $validator->validate ('testModel', $input));

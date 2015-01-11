@@ -31,7 +31,17 @@ class ModelProperty
 
 	public function validate ($data)
 	{
-		return $this->model->validate ($data);
+		// First validate the base
+		if (!parent::validate ($data)) {
+			return false;
+		}
+
+		if (isset ($data)) {
+			return $this->model->validate ($data);
+		}
+		else {
+			return true;
+		}
 	}
 
 }
