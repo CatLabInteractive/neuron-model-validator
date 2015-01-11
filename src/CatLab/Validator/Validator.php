@@ -46,6 +46,10 @@ class Validator {
 			throw new ModelAlreadyDefined ("Model " . $model->getName () . " is already defined.");
 		}
 
+		// Set error container
+		$model->setErrors ($this->errors);
+
+		// Add the model.
 		$this->models[$model->getName ()] = $model;
 	}
 
@@ -71,14 +75,28 @@ class Validator {
 	 */
 	public function validate ($modelName, $data)
 	{
+		// Empty the error collection
+		$this->errors->clear ();
+
+		// Get the model
 		$model = $this->getModel ($modelName);
 
+		// And check.
 		if ($model->validate ($data)) {
 			return true;
 		}
 		else {
 			return false;
 		}
+	}
+
+	/**
+	 * Return all errors
+	 * @return ErrorCollection
+	 */
+	public function getErrors ()
+	{
+		return $this->errors;
 	}
 
 }

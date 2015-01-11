@@ -189,4 +189,13 @@ abstract class Collection
 			return $this[count ($this) -1 ];
 		return null;
 	}
+
+	/**
+	 * Clear array
+	 */
+	public function clear ()
+	{
+		$this->data = array ();
+		$this->rewind ();
+	}
 }
