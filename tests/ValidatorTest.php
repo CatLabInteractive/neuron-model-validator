@@ -75,4 +75,125 @@ class ValidatorTest
 		$this->assertEquals (true, $validator->validate ('testModel', $input));
 	}
 
+	public function testEmpty ()
+	{
+		$specs = array ();
+		$data = array ();
+
+		$validator = new Validator ();
+		$validator->addModel (Model::make ('test', $specs));
+
+		$this->assertTrue ($validator->validate ('test', $data));
+	}
+
+	public function testChildrenCorrect ()
+	{
+		$specs = array (
+			'message' => 'required|string',
+			'user' => array (
+				'id' => 'numeric|required',
+				'company' => array (
+					'id' => 'numeric|required',
+					'name' => 'string|required'
+				)
+			)
+		);
+
+		$data = array (
+			'message' => 'This is a message',
+			'user' => array (
+				'id' => 1,
+				'company' => array (
+					'id' => 1,
+					'name' => 'This is a company name'
+				)
+			)
+		);
+
+		$validator = new Validator ();
+		$validator->addModel (Model::make ('test', $specs));
+
+		$this->assertTrue ($validator->validate ('test', $data));
+	}
+
+	public function testChildrenIncorrect1 ()
+	{
+		$specs = array (
+			'message' => 'required|string',
+			'user' => array (
+				'id' => 'numeric|required',
+				'company' => array (
+					'id' => 'numeric|required',
+					'name' => 'string|required'
+				)
+			)
+		);
+
+		$data = array (
+			'message' => 'This is a message',
+			'user' => array (
+				'company' => array (
+					'name' => 'This is a company name'
+				)
+			)
+		);
+
+		$validator = new Validator ();
+		$validator->addModel (Model::make ('test', $specs));
+
+		$this->assertFalse ($validator->validate ('test', $data));
+	}
+
+	public function testChildrenIncorrect2 ()
+	{
+		$specs = array (
+			'message' => 'required|string',
+			'user' => array (
+				'id' => 'numeric|required',
+				'company' => array (
+					'id' => 'numeric|required',
+					'name' => 'string|required'
+				)
+			)
+		);
+
+		$data = array (
+			'message' => 'This is a message',
+			'user' => array (
+				'id' => 1
+			)
+		);
+
+		$validator = new Validator ();
+		$validator->addModel (Model::make ('test', $specs));
+
+		$this->assertFalse ($validator->validate ('test', $data));
+	}
+
+	public function testOptional1 ()
+	{
+		$specs = array (
+			'message' => 'required|string',
+			'user' => array (
+				'id' => 'numeric|required',
+				'company?' => array (
+					'id' => 'numeric|required',
+					'name' => 'string|required'
+				)
+			)
+		);
+
+		$data = array (
+			'message' => 'This is a message',
+			'user' => array (
+				'id' => 1
+			)
+		);
+
+		$validator = new Validator ();
+		$validator->addModel (Model::make ('test', $specs));
+
+		$this->assertTrue ($validator->validate ('test', $data));
+	}
+
 }

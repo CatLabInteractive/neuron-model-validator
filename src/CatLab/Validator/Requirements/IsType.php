@@ -108,6 +108,9 @@ class IsType
 
 	public function validate ($value)
 	{
+		if (!isset ($value))
+			return true;
+
 		return self::checkInput ($value, $this->type);
 	}
 

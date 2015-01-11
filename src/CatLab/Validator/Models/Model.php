@@ -4,12 +4,28 @@ namespace CatLab\Validator\Models;
 
 use CatLab\Validator\Collections\ErrorCollection;
 use CatLab\Validator\Collections\PropertyCollection;
+use CatLab\Validator\Requirements\Exists;
 
 class Model {
 
-	public static function make ($name, $properties)
+	/**
+	 * @param $name
+	 * @param array $properties
+	 * @param string $prefix
+	 * @return \CatLab\Validator\Models\Model
+	 */
+	public static function make ($name, array $properties, $prefix = null)
 	{
+		$model = new self ($name);
 
+		if ($prefix)
+		{
+			$model->setPrefix ($prefix);
+		}
+
+		$model->processProperties ($properties);
+
+		return $model;
 	}
 
 	/** @var string $name */
@@ -20,6 +36,9 @@ class Model {
 
 	/** @var ErrorCollection $errors */
 	private $errors;
+
+	/** @var string $prefix */
+	private $prefix;
 
 	/**
 	 * @param $name
@@ -91,7 +110,7 @@ class Model {
 		{
 			$value = isset ($data[$property->getName ()]) ? $data[$property->getName ()] : null;
 
-			if (!$property->validate ($value)) {
+			if (!$property->validate ($this, $value)) {
 				$okay = false;
 			}
 		}
@@ -115,5 +134,75 @@ class Model {
 	public function fails ($data)
 	{
 		return !$this->validate ($data);
+	}
+
+	/**
+	 * Process properties input
+	 */
+	private function processProperties (array $properties)
+	{
+		foreach ($properties as $propertyName => $property)
+		{
+			$this->processProperty ($propertyName, $property);
+		}
+	}
+
+	private function processProperty ($name, $property)
+	{
+		// Now this could be two things, a list of filters or a submodel.
+		if (is_array ($property))
+		{
+			if (isset ($property[0]))
+			{
+				// Property name is numeric; this is a filter.
+				// Make a property and continue.
+				$this->addProperty (Property::make ($name, $property));
+			}
+
+			else {
+
+				// Is this model optional?
+				if (substr ($name, -1) === '?')
+				{
+					$name = substr ($name, 0, -1);
+
+					$prefix = $this->getPrefix () . $name . '.';
+
+					$model = self::make ($name, $property, $prefix);
+					$prop = new ModelProperty ($model);
+				}
+				else {
+
+					$prefix = $this->getPrefix () . $name . '.';
+
+					$model = self::make ($name, $property, $prefix);
+
+					$prop = new ModelProperty ($model);
+					$prop->addRequirement (new Exists ());
+				}
+
+				$this->addProperty ($prop);
+			}
+		}
+
+		else {
+			$this->addProperty (Property::make ($name, $property));
+		}
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getPrefix ()
+	{
+		return $this->prefix;
+	}
+
+	/**
+	 * @param string $prefix
+	 */
+	public function setPrefix ($prefix)
+	{
+		$this->prefix = $prefix;
 	}
 }

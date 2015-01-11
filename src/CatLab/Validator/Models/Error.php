@@ -11,11 +11,12 @@ class Error {
 	/** @var Requirement $requirement */
 	private $requirement;
 
-	/** @var string $error */
-	private $error;
+	/** @var Model $model */
+	private $model;
 
-	public function __construct (Property $property, Requirement $requirement)
+	public function __construct (Model $model, Property $property, Requirement $requirement)
 	{
+		$this->setModel ($model);
 		$this->setProperty ($property);
 		$this->setRequirement ($requirement);
 	}
@@ -57,11 +58,27 @@ class Error {
 	}
 
 	/**
+	 * @return Model
+	 */
+	public function getModel ()
+	{
+		return $this->model;
+	}
+
+	/**
+	 * @param Model $model
+	 */
+	public function setModel ($model)
+	{
+		$this->model = $model;
+	}
+
+	/**
 	 * @return string
 	 */
 	public function getError ()
 	{
-		return $this->requirement->getError ($this->getProperty ());
+		return $this->requirement->getError ($this->getModel (), $this->getProperty ());
 	}
 
 	/**
@@ -69,7 +86,7 @@ class Error {
 	 */
 	public function __toString ()
 	{
-		return $this->error;
+		return $this->getError ();
 	}
 
 }

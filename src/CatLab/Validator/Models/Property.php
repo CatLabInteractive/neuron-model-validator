@@ -7,6 +7,29 @@ use CatLab\Validator\Requirements\Requirement;
 
 class Property {
 
+	/**
+	 * @param $name
+	 * @param array|string $requirements
+	 * @return \CatLab\Validator\Models\Property
+	 */
+	public static function make ($name, $requirements = null)
+	{
+		$property = new self ($name);
+
+		if ($requirements) {
+			if (!is_array ($requirements)) {
+				$requirements = explode ('|', $requirements);
+			}
+
+			foreach ($requirements as $requirement) {
+
+				$property->addRequirement (Requirement::getFromString ($requirement));
+			}
+		}
+
+		return $property;
+	}
+
 	/** @var string $property */
 	private $property;
 
@@ -50,14 +73,19 @@ class Property {
 		return $this;
 	}
 
-	public function validate ($data)
+	/**
+	 * @param Model $model
+	 * @param $data
+	 * @return bool
+	 */
+	public function validate (Model $model, $data)
 	{
 		$okay = true;
 
 		foreach ($this->requirements as $requirement) {
 			if (!$requirement->validate ($data)) {
 				$okay = false;
-				$this->errors[] = new Error ($this, $requirement);
+				$this->errors[] = new Error ($model, $this, $requirement);
 			}
 		}
 

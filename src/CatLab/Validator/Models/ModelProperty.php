@@ -29,10 +29,10 @@ class ModelProperty
 		$this->model->setErrors ($errors);
 	}
 
-	public function validate ($data)
+	public function validate (Model $model, $data)
 	{
 		// First validate the base
-		if (!parent::validate ($data)) {
+		if (!parent::validate ($model, $data)) {
 			return false;
 		}
 

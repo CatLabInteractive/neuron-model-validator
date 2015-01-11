@@ -1,12 +1,14 @@
 <?php
 namespace CatLab\Validator\Requirements;
 
-class NotEmpty
+class IsMax
 	extends Requirement {
 
-	public function __construct ()
-	{
+	private $value;
 
+	public function __construct ($value)
+	{
+		$this->value = $value;
 	}
 
 	public function validate ($value)
@@ -14,7 +16,7 @@ class NotEmpty
 		if (!isset ($value))
 			return true;
 
-		return !empty ($value);
+		return $value <= $this->value;
 	}
 
 }
