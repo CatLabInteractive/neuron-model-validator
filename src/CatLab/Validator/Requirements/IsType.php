@@ -1,5 +1,5 @@
 <?php
-namespace CatLab\Validator\Models\Requirements;
+namespace CatLab\Validator\Requirements;
 
 class IsType
 	extends Requirement {

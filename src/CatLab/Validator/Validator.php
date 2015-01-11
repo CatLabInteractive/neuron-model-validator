@@ -96,7 +96,7 @@ class Validator {
 	 */
 	public function getErrors ()
 	{
-		return $this->errors;
+		return clone $this->errors;
 	}
 
 }

@@ -1,5 +1,5 @@
 <?php
-namespace CatLab\Validator\Models\Requirements;
+namespace CatLab\Validator\Requirements;
 
 use CatLab\Validator\Models\Property;
 

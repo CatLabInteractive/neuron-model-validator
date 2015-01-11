@@ -3,10 +3,11 @@
 namespace CatLab\Validator\Tests;
 
 use CatLab\Validator\Models\Model;
+use CatLab\Validator\Models\ModelProperty;
 use CatLab\Validator\Models\Property;
-use CatLab\Validator\Models\Requirements\Exists;
-use CatLab\Validator\Models\Requirements\IsType;
-use CatLab\Validator\Models\Requirements\NotEmpty;
+use CatLab\Validator\Requirements\Exists;
+use CatLab\Validator\Requirements\IsType;
+use CatLab\Validator\Requirements\NotEmpty;
 use CatLab\Validator\Validator;
 
 class ValidatorTest
@@ -32,6 +33,42 @@ class ValidatorTest
 
 		$property = new Property ("counter");
 		$property->addRequirement (new IsType ('numeric'));
+		$model->addProperty ($property);
+
+		$this->assertEquals (true, $validator->validate ('testModel', $input));
+	}
+
+	public function testDimensions ()
+	{
+		$input = array (
+			'name' => 'This is my name',
+			'user' => array (
+				'id' => 1,
+				'name' => 'Thijs'
+			)
+		);
+
+		$validator = new Validator ();
+
+		$model = new Model ('testModel');
+		$validator->addModel ($model);
+
+		$property = new Property ('name');
+		$property->addRequirement (new IsType ('string'));
+		$model->addProperty ($property);
+
+		// Submodel
+		$userModel = new Model ('user');
+
+		$property = new Property ('id');
+		$property->addRequirement (new IsType ('numeric'));
+		$userModel->addProperty ($property);
+
+		$property = new Property ('name');
+		$property->addRequirement (new IsType ('string'));
+		$userModel->addProperty ($property);
+
+		$property = new ModelProperty ($userModel);
 		$model->addProperty ($property);
 
 		$this->assertEquals (true, $validator->validate ('testModel', $input));

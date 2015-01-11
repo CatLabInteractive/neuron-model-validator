@@ -3,7 +3,7 @@ namespace CatLab\Validator\Models;
 
 use CatLab\Validator\Collections\ErrorCollection;
 use CatLab\Validator\Collections\RequirementCollection;
-use CatLab\Validator\Models\Requirements\Requirement;
+use CatLab\Validator\Requirements\Requirement;
 
 class Property {
 

@@ -21,6 +21,9 @@ class Model {
 	/** @var ErrorCollection $errors */
 	private $errors;
 
+	/**
+	 * @param $name
+	 */
 	public function __construct ($name)
 	{
 		$this->setName ($name);

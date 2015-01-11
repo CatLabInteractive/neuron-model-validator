@@ -1,7 +1,7 @@
 <?php
-namespace CatLab\Validator\Models\Requirements;
+namespace CatLab\Validator\Requirements;
 
-class NotEmpty
+class Exists
 	extends Requirement {
 
 	public function __construct ()
@@ -11,7 +11,7 @@ class NotEmpty
 
 	public function validate ($value)
 	{
-		return !empty ($value);
+		return isset ($value);
 	}
 
 }
