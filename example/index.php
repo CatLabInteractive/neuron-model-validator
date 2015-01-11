@@ -6,7 +6,6 @@ require '../vendor/autoload.php';
 
 $validator = Validator::fromSwagger ('specs/');
 
-echo '<pre>';
 $result = $validator->validate ('PackBaseOutput', array (
 
 	'pack' => array (
@@ -23,8 +22,7 @@ $result = $validator->validate ('PackBaseOutput', array (
 
 ));
 
-if ($result)
-{
+if ($result) {
 	echo '<p><strong>Success!</strong></p>';
 }
 else {

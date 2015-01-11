@@ -7,15 +7,14 @@ Example usage:
 $validator = Validator::fromSwagger ('specs/');
 
 $input = array ('id' => 1, 'name' => 'Example');
-$result = $validator->validate ('ModelId', $input);
 
-if ($result) {
-	echo '<p><strong>Success!</strong></p>';
+if ($validator->validate ('ModelId', $input)) {
+	echo 'Success!';
 }
 else {
-	echo '<p><strong>Failure</strong></p>';
+	echo 'Failure' . "\n";
 	foreach ($validator->getErrors () as $v) {
-		echo '<p>' . $v . '</p>';
+		echo $v . "\n";
 	}
 }
 ```
