@@ -1,4 +1,7 @@
 <?php
+
+namespace CatLab\Validator\Importer;
+
 use CatLab\Validator\Validator;
 
 class Swagger {

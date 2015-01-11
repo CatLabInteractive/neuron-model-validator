@@ -7,7 +7,7 @@ use CatLab\Validator\Exceptions\ModelAlreadyDefined;
 use CatLab\Validator\Exceptions\ModelNotDefined;
 use CatLab\Validator\Models\Error;
 use CatLab\Validator\Models\Model;
-use Swagger;
+use CatLab\Validator\Importer\Swagger;
 
 class Validator {
 
