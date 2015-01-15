@@ -16,7 +16,12 @@ class IsType
 
 	public static function checkInput ($value, $type)
 	{
-		if ($type == 'text')
+		if ($type == 'array')
+		{
+			return is_array ($value);
+		}
+
+		else if ($type == 'text')
 		{
 			return true;
 		}
