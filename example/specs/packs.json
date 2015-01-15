@@ -64,12 +64,15 @@
             "required": [
                 "id",
                 "name",
-                "owner",
+                "publisher",
                 "type"
             ],
             "properties": {
                 "statistics": {
                     "$ref": "PackStatistics"
+                },
+                "publisher": {
+                    "$ref": "PublisherBase"
                 },
                 "id": {
                     "type": "integer"
@@ -85,20 +88,31 @@
                 "name": {
                     "type": "string"
                 },
-                "owner": {
-                    "$ref": "Publisher"
+                "status": {
+                    "type": "string"
                 }
             }
         },
         "PackStatistics": {
             "id": "PackStatistics",
             "description": "Class PackStatistics",
-            "properties": [
-
-            ]
+            "properties": {
+                "difficulty": {
+                    "type": "integer"
+                },
+                "rating": {
+                    "type": "integer"
+                },
+                "rounds": {
+                    "type": "integer"
+                },
+                "questions": {
+                    "type": "integer"
+                }
+            }
         },
-        "Publisher": {
-            "id": "Publisher",
+        "PublisherBase": {
+            "id": "PublisherBase",
             "description": "Class Publisher",
             "required": [
                 "age",
@@ -120,9 +134,51 @@
                     "type": "string"
                 },
                 "statistics": {
-                    "$ref": null
+                    "$ref": "PublisherStatistics"
                 },
                 "age": {
+                    "type": "integer"
+                }
+            }
+        },
+        "PublisherStatistics": {
+            "id": "PublisherStatistics",
+            "description": "Class PublisherStatistics",
+            "required": [
+                "created",
+                "played"
+            ],
+            "properties": {
+                "joined_at": {
+                    "type": "string"
+                },
+                "last_online": {
+                    "type": "string"
+                },
+                "created": {
+                    "$ref": "PublisherStatisticsNode"
+                },
+                "played": {
+                    "$ref": "PublisherStatisticsNode"
+                }
+            }
+        },
+        "PublisherStatisticsNode": {
+            "id": "PublisherStatisticsNode",
+            "description": "Class PublisherStatistics",
+            "required": [
+                "packs",
+                "questions",
+                "quizzes"
+            ],
+            "properties": {
+                "questions": {
+                    "type": "integer"
+                },
+                "packs": {
+                    "type": "integer"
+                },
+                "quizzes": {
                     "type": "integer"
                 }
             }
@@ -131,11 +187,11 @@
             "id": "CommentCollection",
             "description": "Class CommentCollection",
             "required": [
-                "data",
+                "items",
                 "pagination"
             ],
             "properties": {
-                "data": {
+                "items": {
                     "type": "array",
                     "items": {
                         "$ref": "Comment"
@@ -157,7 +213,7 @@
                     "type": "string"
                 },
                 "publisher": {
-                    "$ref": "Publisher"
+                    "$ref": "PublisherBase"
                 }
             }
         },

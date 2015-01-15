@@ -4,6 +4,26 @@
     "resourcePath": "/rounds",
     "apis": [
         {
+            "path": "/publishers/{id}/rounds",
+            "description": "Operations on rounds",
+            "operations": [
+                {
+                    "method": "POST",
+                    "summary": "Create a new round",
+                    "nickname": "create",
+                    "type": "RoundOutput",
+                    "parameters": [
+                        {
+                            "paramType": "body",
+                            "type": "RoundInput",
+                            "required": true,
+                            "description": "Round input"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
             "path": "/rounds/{id}",
             "description": "Operations on rounds",
             "operations": [
@@ -11,7 +31,22 @@
                     "method": "GET",
                     "summary": "Return a round",
                     "nickname": "get",
-                    "type": "RoundBaseOutput",
+                    "type": "RoundOutput",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "id",
+                            "type": "integer",
+                            "required": true,
+                            "description": "Round ID"
+                        }
+                    ]
+                },
+                {
+                    "method": "PUT",
+                    "summary": "Return a round",
+                    "nickname": "get",
+                    "type": "RoundOutput",
                     "parameters": [
                         {
                             "paramType": "path",
@@ -31,7 +66,7 @@
                 {
                     "method": "GET",
                     "summary": "Return all comments on a round",
-                    "nickname": "get",
+                    "nickname": "comments",
                     "type": "CommentCollection",
                     "parameters": [
                         {
@@ -44,32 +79,89 @@
                     ]
                 }
             ]
+        },
+        {
+            "path": "/rounds/{id}/translated",
+            "description": "Operations on rounds",
+            "operations": [
+                {
+                    "method": "GET",
+                    "summary": "Return a translated round",
+                    "nickname": "getTranslated",
+                    "type": "TranslatedRoundOutput",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "id",
+                            "type": "integer",
+                            "required": true,
+                            "description": "Round ID"
+                        }
+                    ]
+                },
+                {
+                    "method": "PUT",
+                    "summary": "Update an existing round.",
+                    "nickname": "getTranslated",
+                    "type": "TranslatedRoundOutput",
+                    "parameters": [
+                        {
+                            "paramType": "path",
+                            "name": "id",
+                            "type": "integer",
+                            "required": true,
+                            "description": "Round ID"
+                        },
+                        {
+                            "paramType": "body",
+                            "name": "body",
+                            "type": "TranslatedRoundInput",
+                            "required": true
+                        }
+                    ]
+                }
+            ]
         }
     ],
     "models": {
-        "RoundBaseOutput": {
-            "id": "RoundBaseOutput",
+        "RoundOutput": {
+            "id": "RoundOutput",
             "required": [
                 "round"
             ],
             "properties": {
                 "round": {
-                    "$ref": "RoundBase"
+                    "$ref": "Round"
                 }
             }
         },
-        "RoundBase": {
-            "id": "RoundBase",
+        "Round": {
+            "id": "Round",
             "description": "Class Round",
             "required": [
                 "id",
                 "name",
-                "owner",
+                "publisher",
                 "type"
             ],
             "properties": {
+                "tags": {
+                    "$ref": "TagCollection"
+                },
+                "questions": {
+                    "$ref": "QuestionCollection"
+                },
                 "statistics": {
                     "$ref": "RoundStatistics"
+                },
+                "category": {
+                    "$ref": "Category"
+                },
+                "image": {
+                    "type": "string"
+                },
+                "publisher": {
+                    "$ref": "PublisherBase"
                 },
                 "id": {
                     "type": "integer"
@@ -85,20 +177,77 @@
                 "name": {
                     "type": "string"
                 },
-                "owner": {
-                    "$ref": "Publisher"
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "TagCollection": {
+            "id": "TagCollection",
+            "description": "Class TagCollection",
+            "required": [
+                "items"
+            ],
+            "properties": {
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "Tag"
+                    }
+                }
+            }
+        },
+        "QuestionCollection": {
+            "id": "QuestionCollection",
+            "description": "Class QuestionCollection",
+            "required": [
+                "items"
+            ],
+            "properties": {
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "Question"
+                    }
                 }
             }
         },
         "RoundStatistics": {
             "id": "RoundStatistics",
             "description": "Class RoundStatistics",
-            "properties": [
-
-            ]
+            "properties": {
+                "difficulty": {
+                    "type": "integer"
+                },
+                "rating": {
+                    "type": "integer"
+                },
+                "rounds": {
+                    "type": "integer"
+                },
+                "questions": {
+                    "type": "integer"
+                }
+            }
         },
-        "Publisher": {
-            "id": "Publisher",
+        "Category": {
+            "id": "Category",
+            "description": "Class Category",
+            "required": [
+                "id",
+                "name"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "PublisherBase": {
+            "id": "PublisherBase",
             "description": "Class Publisher",
             "required": [
                 "age",
@@ -120,9 +269,241 @@
                     "type": "string"
                 },
                 "statistics": {
-                    "$ref": null
+                    "$ref": "PublisherStatistics"
                 },
                 "age": {
+                    "type": "integer"
+                }
+            }
+        },
+        "Tag": {
+            "id": "Tag",
+            "description": "Class Tag",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "Question": {
+            "id": "Question",
+            "description": "Class Question",
+            "required": [
+                "id",
+                "name",
+                "type"
+            ],
+            "properties": {
+                "statistics": {
+                    "$ref": "QuestionStatistics"
+                },
+                "options": {
+                    "$ref": "OptionCollection"
+                },
+                "category": {
+                    "$ref": "Category"
+                },
+                "explanation": {
+                    "type": "string"
+                },
+                "attachments": {
+                    "$ref": "AttachmentsQuestion"
+                },
+                "delayMultiplier": {
+                    "type": "number",
+                    "format": "float"
+                },
+                "randomizeOptions": {
+                    "type": "boolean"
+                },
+                "multipleCorrect": {
+                    "type": "boolean"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "quiz",
+                        "pack",
+                        "round"
+                    ]
+                },
+                "name": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
+        "PublisherStatistics": {
+            "id": "PublisherStatistics",
+            "description": "Class PublisherStatistics",
+            "required": [
+                "created",
+                "played"
+            ],
+            "properties": {
+                "joined_at": {
+                    "type": "string"
+                },
+                "last_online": {
+                    "type": "string"
+                },
+                "created": {
+                    "$ref": "PublisherStatisticsNode"
+                },
+                "played": {
+                    "$ref": "PublisherStatisticsNode"
+                }
+            }
+        },
+        "QuestionStatistics": {
+            "id": "QuestionStatistics",
+            "description": "Class QuestionStatistics",
+            "properties": {
+                "difficulty": {
+                    "type": "integer"
+                },
+                "rating": {
+                    "type": "integer"
+                }
+            }
+        },
+        "OptionCollection": {
+            "id": "OptionCollection",
+            "description": "Class QuizCollection",
+            "required": [
+                "items"
+            ],
+            "properties": {
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "Option"
+                    }
+                }
+            }
+        },
+        "AttachmentsQuestion": {
+            "id": "AttachmentsQuestion",
+            "description": "Class AttachmentsQuestion",
+            "properties": {
+                "during": {
+                    "$ref": "AttachmentCollectionDuring"
+                },
+                "before": {
+                    "$ref": "AttachmentCollection"
+                },
+                "after": {
+                    "$ref": "AttachmentCollection"
+                }
+            }
+        },
+        "PublisherStatisticsNode": {
+            "id": "PublisherStatisticsNode",
+            "description": "Class PublisherStatistics",
+            "required": [
+                "packs",
+                "questions",
+                "quizzes"
+            ],
+            "properties": {
+                "questions": {
+                    "type": "integer"
+                },
+                "packs": {
+                    "type": "integer"
+                },
+                "quizzes": {
+                    "type": "integer"
+                }
+            }
+        },
+        "Option": {
+            "id": "Option",
+            "description": "Class Option",
+            "properties": {
+                "option": {
+                    "type": "integer"
+                },
+                "text": {
+                    "type": "string"
+                },
+                "correct": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "AttachmentCollectionDuring": {
+            "id": "AttachmentCollectionDuring",
+            "required": [
+                "items"
+            ],
+            "properties": {
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "AttachmentDuring"
+                    }
+                }
+            }
+        },
+        "AttachmentCollection": {
+            "id": "AttachmentCollection",
+            "description": "Class AttachmentCollection",
+            "required": [
+                "items"
+            ],
+            "properties": {
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "Attachment"
+                    }
+                }
+            }
+        },
+        "AttachmentDuring": {
+            "id": "AttachmentDuring",
+            "description": "Class Attachment",
+            "properties": {
+                "waitForFinish": {
+                    "type": "boolean"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "url": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "duration": {
+                    "type": "integer"
+                }
+            }
+        },
+        "Attachment": {
+            "id": "Attachment",
+            "description": "Class Attachment",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "url": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "duration": {
                     "type": "integer"
                 }
             }
@@ -131,11 +512,11 @@
             "id": "CommentCollection",
             "description": "Class CommentCollection",
             "required": [
-                "data",
+                "items",
                 "pagination"
             ],
             "properties": {
-                "data": {
+                "items": {
                     "type": "array",
                     "items": {
                         "$ref": "Comment"
@@ -157,7 +538,7 @@
                     "type": "string"
                 },
                 "publisher": {
-                    "$ref": "Publisher"
+                    "$ref": "PublisherBase"
                 }
             }
         },
@@ -188,6 +569,497 @@
                 },
                 "before": {
                     "type": "string"
+                }
+            }
+        },
+        "TranslatedRoundOutput": {
+            "id": "TranslatedRoundOutput",
+            "properties": {
+                "round": {
+                    "$ref": "TranslatedRound"
+                }
+            }
+        },
+        "TranslatedRoundInput": {
+            "id": "TranslatedRoundInput",
+            "required": [
+                "category",
+                "languages",
+                "questions",
+                "resources"
+            ],
+            "properties": {
+                "languages": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "EntryLanguageInput"
+                    }
+                },
+                "category": {
+                    "$ref": "CategoryInput"
+                },
+                "resources": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "TranslatedRoundLocalizedInput"
+                    }
+                },
+                "questions": {
+                    "$ref": "TranslatedQuestionCollectionInput"
+                }
+            }
+        },
+        "TranslatedRound": {
+            "id": "TranslatedRound",
+            "description": "Class TranslatedRound",
+            "required": [
+                "category",
+                "id",
+                "languages",
+                "publisher",
+                "questions",
+                "resources",
+                "statistics"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "languages": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "EntryLanguage"
+                    }
+                },
+                "category": {
+                    "$ref": "Category"
+                },
+                "publisher": {
+                    "$ref": "PublisherBase"
+                },
+                "statistics": {
+                    "$ref": "RoundStatistics"
+                },
+                "resources": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "TranslatedRoundLocalized"
+                    }
+                },
+                "questions": {
+                    "$ref": "TranslatedQuestionCollection"
+                }
+            }
+        },
+        "EntryLanguageInput": {
+            "id": "EntryLanguageInput",
+            "required": [
+                "language"
+            ],
+            "properties": {
+                "language": {
+                    "description": "The entity ID of the localized entity",
+                    "type": "string"
+                }
+            }
+        },
+        "CategoryInput": {
+            "id": "CategoryInput",
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string"
+                }
+            }
+        },
+        "TranslatedRoundLocalizedInput": {
+            "id": "TranslatedRoundLocalizedInput",
+            "required": [
+                "language",
+                "name"
+            ],
+            "properties": {
+                "language": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "image": {
+                    "type": "string"
+                },
+                "tags": {
+                    "$ref": "TagCollectionInput"
+                }
+            }
+        },
+        "TranslatedQuestionCollectionInput": {
+            "id": "TranslatedQuestionCollectionInput",
+            "required": [
+                "items"
+            ],
+            "properties": {
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "TranslatedQuestionInput"
+                    }
+                }
+            }
+        },
+        "EntryLanguage": {
+            "id": "EntryLanguage",
+            "required": [
+                "id",
+                "language"
+            ],
+            "properties": {
+                "id": {
+                    "description": "The entity ID of the localized entity",
+                    "type": "integer"
+                },
+                "language": {
+                    "description": "The entity ID of the localized entity",
+                    "type": "string"
+                }
+            }
+        },
+        "TranslatedRoundLocalized": {
+            "id": "TranslatedRoundLocalized",
+            "required": [
+                "image",
+                "language",
+                "name",
+                "status",
+                "tags"
+            ],
+            "properties": {
+                "language": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "image": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string",
+                    "enum": [
+                        "draft",
+                        "beta",
+                        "published"
+                    ]
+                },
+                "tags": {
+                    "$ref": "TagCollection"
+                }
+            }
+        },
+        "TranslatedQuestionCollection": {
+            "id": "TranslatedQuestionCollection",
+            "description": "Class TranslatedQuestionCollection",
+            "required": [
+                "items"
+            ],
+            "properties": {
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "TranslatedQuestion"
+                    }
+                }
+            }
+        },
+        "TagCollectionInput": {
+            "id": "TagCollectionInput",
+            "required": [
+                "items"
+            ],
+            "properties": {
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "TagInput"
+                    }
+                }
+            }
+        },
+        "TranslatedQuestionInput": {
+            "id": "TranslatedQuestionInput",
+            "required": [
+                "resources"
+            ],
+            "properties": {
+                "resources": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "TranslatedQuestionLocalizedInput"
+                    }
+                },
+                "category": {
+                    "$ref": "CategoryInput"
+                },
+                "randomizeOptions": {
+                    "description": "Should options be randomized?",
+                    "type": "boolean",
+                    "defaultValue": true
+                },
+                "delayMultiplier": {
+                    "description": "Multiplier to extend / decrease the question duration",
+                    "type": "float",
+                    "defaultValue": 1
+                },
+                "multipleCorrect": {
+                    "description": "Can multiple options be correct?",
+                    "type": "boolean",
+                    "defaultValue": false
+                }
+            }
+        },
+        "TranslatedQuestion": {
+            "id": "TranslatedQuestion",
+            "description": "Class TranslatedQuestion",
+            "required": [
+                "category",
+                "delayMultiplier",
+                "id",
+                "multipleCorrect",
+                "randomizeOptions",
+                "resources",
+                "statistics"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "statistics": {
+                    "$ref": "QuestionStatistics"
+                },
+                "resources": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "TranslatedQuestionLocalized"
+                    }
+                },
+                "category": {
+                    "$ref": "Category"
+                },
+                "randomizeOptions": {
+                    "description": "Should options be randomized?",
+                    "type": "boolean"
+                },
+                "delayMultiplier": {
+                    "description": "Multiplier to extend / decrease the question duration",
+                    "type": "float"
+                },
+                "multipleCorrect": {
+                    "description": "Can multiple options be correct?",
+                    "type": "boolean"
+                }
+            }
+        },
+        "TagInput": {
+            "id": "TagInput",
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "TranslatedQuestionLocalizedInput": {
+            "id": "TranslatedQuestionLocalizedInput",
+            "required": [
+                "language",
+                "name",
+                "options"
+            ],
+            "properties": {
+                "language": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "options": {
+                    "$ref": "OptionCollectionInput"
+                },
+                "attachments": {
+                    "$ref": "AttachmentsQuestionInput"
+                },
+                "explanation": {
+                    "type": "string"
+                }
+            }
+        },
+        "TranslatedQuestionLocalized": {
+            "id": "TranslatedQuestionLocalized",
+            "required": [
+                "attachments",
+                "explanation",
+                "language",
+                "name",
+                "options"
+            ],
+            "properties": {
+                "language": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "options": {
+                    "$ref": "OptionCollection"
+                },
+                "attachments": {
+                    "$ref": "AttachmentsQuestion"
+                },
+                "explanation": {
+                    "type": "string"
+                }
+            }
+        },
+        "OptionCollectionInput": {
+            "id": "OptionCollectionInput",
+            "required": [
+                "items"
+            ],
+            "properties": {
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "OptionInput"
+                    }
+                }
+            }
+        },
+        "AttachmentsQuestionInput": {
+            "id": "AttachmentsQuestionInput",
+            "properties": {
+                "before": {
+                    "$ref": "AttachmentCollectionInput"
+                },
+                "during": {
+                    "$ref": "AttachmentCollectionDuringInput"
+                },
+                "after": {
+                    "$ref": "AttachmentCollectionInput"
+                }
+            }
+        },
+        "OptionInput": {
+            "id": "OptionInput",
+            "required": [
+                "correct",
+                "option",
+                "text"
+            ],
+            "properties": {
+                "option": {
+                    "type": "integer"
+                },
+                "text": {
+                    "type": "string"
+                },
+                "correct": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "AttachmentCollectionInput": {
+            "id": "AttachmentCollectionInput",
+            "required": [
+                "items"
+            ],
+            "properties": {
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "AttachmentInput"
+                    }
+                }
+            }
+        },
+        "AttachmentCollectionDuringInput": {
+            "id": "AttachmentCollectionDuringInput",
+            "required": [
+                "items"
+            ],
+            "properties": {
+                "items": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "AttachmentDuringInput"
+                    }
+                }
+            }
+        },
+        "AttachmentInput": {
+            "id": "AttachmentInput",
+            "required": [
+                "type",
+                "url"
+            ],
+            "properties": {
+                "id": {
+                    "description": "If set, update existing attachment.",
+                    "type": "string"
+                },
+                "url": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "duration": {
+                    "type": "integer",
+                    "defaultValue": 10
+                }
+            }
+        },
+        "AttachmentDuringInput": {
+            "id": "AttachmentDuringInput",
+            "required": [
+                "type",
+                "url"
+            ],
+            "properties": {
+                "id": {
+                    "description": "If set, update existing attachment.",
+                    "type": "string"
+                },
+                "url": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "waitForFinish": {
+                    "type": "boolean",
+                    "defaultValue": false
+                },
+                "delay": {
+                    "type": "integer",
+                    "defaultValue": 10
+                }
+            }
+        },
+        "RoundInput": {
+            "id": "RoundInput",
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "category": {
+                    "type": "integer"
                 }
             }
         }

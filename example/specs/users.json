@@ -44,6 +44,7 @@
             "required": [
                 "avatar",
                 "id",
+                "locale",
                 "username"
             ],
             "properties": {
@@ -54,6 +55,9 @@
                     "type": "string"
                 },
                 "avatar": {
+                    "type": "string"
+                },
+                "locale": {
                     "type": "string"
                 }
             }

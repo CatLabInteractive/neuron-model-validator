@@ -26,9 +26,9 @@ class IsType
 			return true;
 		}
 
-		else if ($type == 'bool')
+		else if ($type == 'bool' || $type == 'boolean')
 		{
-			return $value == 1 || $value == 'true';
+			return $value === true || $value === false || $value === 1 || $value === 0;
 		}
 
 		elseif ($type == 'varchar' || $type == 'string')
@@ -86,7 +86,7 @@ class IsType
 			//return (bool)preg_match("/\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i", $value);
 		}
 
-		elseif ($type == 'number' || $type == 'numeric')
+		elseif ($type == 'number' || $type == 'numeric' || $type == 'float')
 		{
 			return is_numeric ($value);
 		}
