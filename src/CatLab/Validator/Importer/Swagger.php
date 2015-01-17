@@ -62,9 +62,10 @@ class Swagger {
 		$content = file_get_contents ($this->path . $filepath);
 		$content = json_decode ($content, true);
 
-		foreach ($content['models'] as $model)
-		{
-			$this->library[$model['id']] = $model;
+		if (isset ($content['models'])) {
+			foreach ($content['models'] as $model) {
+				$this->library[$model['id']] = $model;
+			}
 		}
 	}
 
