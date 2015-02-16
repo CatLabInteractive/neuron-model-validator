@@ -17,6 +17,8 @@ class Swagger {
 	private $path;
 	private $library;
 
+	const MAX_DEPTH = 10;
+
 	public function __construct ($path)
 	{
 		$this->setPath ($path);
@@ -78,7 +80,12 @@ class Swagger {
 		}
 	}
 
-	private function getModel ($id, $prefix = null)
+	private function hasReachedDepth ($depth)
+	{
+		return $depth > self::MAX_DEPTH;
+	}
+
+	private function getModel ($id, $prefix = null, $depth = 0)
 	{
 		if (!isset ($this->library[$id]))
 			throw new ModelNotDefined ("Model " . $id . " was not found in swagger specifications.");
@@ -88,6 +95,10 @@ class Swagger {
 		$model = new Model ($data['id']);
 		$model->setPrefix ($prefix);
 
+		// Has reached depth? In that case, ignore teh properties.
+		if ($this->hasReachedDepth ($depth))
+			return $model;
+
 		/** @var Property[] $properties */
 		$properties = array ();
 
@@ -95,7 +106,7 @@ class Swagger {
 			foreach ($data['properties'] as $propName => $property) {
 				if (!empty ($property['$ref']))
 				{
-					$subModel = $this->getModel ($property['$ref'], $model->getPrefix () . $property['$ref'] . '.');
+					$subModel = $this->getModel ($property['$ref'], $model->getPrefix () . $property['$ref'] . '.', $depth + 1);
 
 					$properties[$propName] = new ModelProperty ($subModel, $propName);
 					$model->addProperty ($properties[$propName]);
@@ -112,7 +123,7 @@ class Swagger {
 					{
 						if (isset ($property['items']['$ref']))
 						{
-							$subModel = $this->getModel ($property['items']['$ref'], $model->getPrefix () . $property['items']['$ref'] . '[].');
+							$subModel = $this->getModel ($property['items']['$ref'], $model->getPrefix () . $property['items']['$ref'] . '[].', $depth + 1);
 							$childProperty = new ModelProperty ($subModel, $propName);
 						}
 
