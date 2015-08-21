@@ -4,9 +4,15 @@ namespace CatLab\Validator\Models;
 use CatLab\Validator\Collections\ErrorCollection;
 use CatLab\Validator\Collections\RequirementCollection;
 use CatLab\Validator\Requirements\Equals;
+use CatLab\Validator\Requirements\IsType;
 use CatLab\Validator\Requirements\Requirement;
 
 class Property {
+
+	/**
+	 * @var string
+	 */
+	private $type;
 
 	/**
 	 * @param $name
@@ -61,7 +67,21 @@ class Property {
 	public function addRequirement (Requirement $requirement)
 	{
 		$this->requirements[] = $requirement;
+
+		// Is of IsType class?
+		if ($requirement instanceof IsType) {
+			$this->type = $requirement->getType();
+		}
+
 		return $this;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getType()
+	{
+		return $this->type;
 	}
 
 	/**
@@ -117,7 +137,7 @@ class Property {
 		$okay = true;
 
 		foreach ($this->requirements as $requirement) {
-			if (!$requirement->validate ($data)) {
+			if (!$requirement->validate ($data, $this)) {
 				$okay = false;
 				$this->errors[] = new Error ($model, $this, $requirement);
 			}

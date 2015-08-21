@@ -5,18 +5,10 @@ use CatLab\Validator\Models\Model;
 use CatLab\Validator\Models\Property;
 
 class IsArray
-	extends Requirement {
+	extends IsType {
 
 	public function __construct ()
 	{
-
-	}
-
-	public function validate ($value)
-	{
-		if (!isset ($value))
-			return true;
-
-		return is_array ($value);
+		parent::__construct('array');
 	}
 }

@@ -7,6 +7,9 @@ use CatLab\Validator\Models\Property;
 class IsType
 	extends Requirement {
 
+	/**
+	 * @var string
+	 */
 	private $type;
 
 	public function __construct ($type)
@@ -56,6 +59,22 @@ class IsType
 		{
 			$time = explode ('-', $value);
 			return self::isValidUTF8 ($value) && (count ($time) == 3);
+		}
+
+		elseif ($type == 'datetime')
+		{
+			if (is_numeric($value)) {
+				return true;
+			}
+			else {
+				try {
+					$timestamp = new \DateTime($value);
+					return $timestamp !== false;
+				}
+				catch (\Exception $e) {
+					return false;
+				}
+			}
 		}
 
 		elseif ($type == 'md5')
@@ -114,7 +133,20 @@ class IsType
 		return (bool) preg_match('//u', $str);
 	}
 
-	public function validate ($value)
+	/**
+	 * @return string
+	 */
+	public function getType()
+	{
+		return $this->type;
+	}
+
+	/**
+	 * @param $value
+	 * @param Property $property
+	 * @return bool
+	 */
+	public function validate ($value, Property $property)
 	{
 		if (!isset ($value))
 			return true;
@@ -122,6 +154,11 @@ class IsType
 		return self::checkInput ($value, $this->type);
 	}
 
+	/**
+	 * @param Model $model
+	 * @param Property $property
+	 * @return string
+	 */
 	public function getError (Model $model, Property $property)
 	{
 		$error = parent::getError ($model, $property);

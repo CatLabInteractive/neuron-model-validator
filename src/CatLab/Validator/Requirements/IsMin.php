@@ -1,6 +1,8 @@
 <?php
 namespace CatLab\Validator\Requirements;
 
+use CatLab\Validator\Models\Property;
+
 class IsMin
 	extends Requirement {
 
@@ -11,7 +13,7 @@ class IsMin
 		$this->value = $value;
 	}
 
-	public function validate ($value)
+	public function validate ($value, Property $property)
 	{
 		if (!isset ($value))
 			return true;

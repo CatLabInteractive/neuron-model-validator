@@ -318,4 +318,72 @@ class ValidatorTest
 		$this->assertThat($data, new IsValidModel($model));
 	}
 
+	public function testDateTimeConvertion()
+	{
+		$validator = new Validator();
+
+		$model = Model::make(
+			'DateTimeModel',
+			array(
+				'timestamp' => 'required|datetime',
+			)
+		);
+
+		$validator->addModel($model);
+
+		$model->setValue('timestamp', new \DateTime('2015-01-01'));
+
+		$data = array(
+			'timestamp' => '2015-01-01'
+		);
+
+		$this->assertTrue($validator->validate('DateTimeModel', $data));
+	}
+
+	public function testDateTimeConvertion2()
+	{
+		$validator = new Validator();
+
+		$model = Model::make(
+			'DateTimeModel',
+			array(
+				'timestamp' => 'required|datetime',
+			)
+		);
+
+		$validator->addModel($model);
+
+		$model->setValue('timestamp', new \DateTime('2015-01-01'));
+
+		$datetime = new \DateTime('2015-01-01');
+		$data = array(
+			'timestamp' => $datetime->getTimestamp()
+		);
+
+		$this->assertTrue($validator->validate('DateTimeModel', $data));
+	}
+
+	public function testDateTimeConvertion3()
+	{
+		$validator = new Validator();
+
+		$model = Model::make(
+			'DateTimeModel',
+			array(
+				'timestamp' => 'required|datetime',
+			)
+		);
+
+		$validator->addModel($model);
+
+		$model->setValue('timestamp', new \DateTime('2015-01-01'));
+
+		$datetime = new \DateTime('2015-01-02');
+		$data = array(
+			'timestamp' => $datetime->getTimestamp()
+		);
+
+		$this->assertFalse($validator->validate('DateTimeModel', $data));
+	}
+
 }

@@ -1,5 +1,7 @@
 <?php
 namespace CatLab\Validator\Requirements;
+use CatLab\Validator\Exceptions\TranslateValueException;
+use CatLab\Validator\Models\Property;
 
 /**
  * Class Equals
@@ -8,8 +10,7 @@ namespace CatLab\Validator\Requirements;
  *
  * @package CatLab\Validator\Requirements
  */
-class Equals
-	extends Requirement {
+class Equals extends Requirement {
 
 	/**
 	 * @var mixed
@@ -44,11 +45,61 @@ class Equals
 
 	/**
 	 * @param $value
+	 * @return \DateTime
+	 * @throws TranslateValueException
+	 */
+	private function convertToDatetime($value)
+	{
+		if ($value instanceof \DateTime) {
+			return $value;
+		}
+
+		elseif (is_numeric($value)) {
+			$date = new \DateTime();
+			$date->setTimestamp($value);
+
+			return $date;
+		}
+
+		elseif ($value = new \DateTime($value)) {
+			return $value;
+		}
+
+		else {
+			throw new TranslateValueException("Could not convert to datetime");
+		}
+
+	}
+
+	/**
+	 * Convert values for comparison
+	 * @param $value
+	 * @param $type
+	 * @return \DateTime
+	 * @throws TranslateValueException
+	 */
+	private function convertValue($value, $type)
+	{
+		switch ($type)
+		{
+			case 'datetime':
+				return $this->convertToDatetime($value);
+
+			default:
+				return $value;
+		}
+	}
+
+	/**
+	 * @param $value
+	 * @param Property $property
 	 * @return bool
 	 */
-	public function validate ($value)
+	public function validate ($value, Property $property)
 	{
-		return $this->value == $value;
+		// Guess the type
+		$type = $property->getType();
+		return $this->convertValue($this->value, $type) == $this->convertValue($value, $type);
 	}
 
 }

@@ -1,6 +1,8 @@
 <?php
 namespace CatLab\Validator\Requirements;
 
+use CatLab\Validator\Models\Property;
+
 class Exists
 	extends Requirement {
 
@@ -9,7 +11,7 @@ class Exists
 
 	}
 
-	public function validate ($value)
+	public function validate ($value, Property $property)
 	{
 		return isset ($value);
 	}

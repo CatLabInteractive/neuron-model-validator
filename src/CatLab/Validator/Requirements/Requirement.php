@@ -34,6 +34,9 @@ abstract class Requirement {
 			case 'string':
 				return new IsType ('string');
 
+			case 'datetime':
+				return new IsType('datetime');
+
 			case 'min':
 				if (!isset ($parts[1]) || is_numeric ($parts[1]))
 				{
@@ -65,9 +68,10 @@ abstract class Requirement {
 
 	/**
 	 * @param $value
+	 * @param Property $property
 	 * @return bool
 	 */
-	public function validate ($value)
+	public function validate ($value, Property $property)
 	{
 		return true;
 	}
