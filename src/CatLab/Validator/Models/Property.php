@@ -3,6 +3,7 @@ namespace CatLab\Validator\Models;
 
 use CatLab\Validator\Collections\ErrorCollection;
 use CatLab\Validator\Collections\RequirementCollection;
+use CatLab\Validator\Requirements\Equals;
 use CatLab\Validator\Requirements\Requirement;
 
 class Property {
@@ -71,6 +72,39 @@ class Property {
 	{
 		$this->errors = $errors;
 		return $this;
+	}
+
+	/**
+	 * @param mixed $value
+	 * @return Property
+	 */
+	public function setValue($value)
+	{
+		// Check if we already have a value
+		$found = false;
+		foreach ($this->requirements as $requirement) {
+			if ($requirement instanceof Equals) {
+				$requirement->setValue($value);
+				$found = true;
+			}
+		}
+
+		if (!$found) {
+			$this->addRequirement(new Equals($value));
+		}
+
+		return $this;
+	}
+
+	public function clearValue()
+	{
+		$reqs = array();
+		foreach ($this->requirements as $requirement) {
+			if (! $requirement instanceof Equals) {
+				$reqs[] = $requirement;
+			}
+		}
+		$this->requirements = $reqs;
 	}
 
 	/**

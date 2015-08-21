@@ -4,6 +4,7 @@ namespace CatLab\Validator\Models;
 
 use CatLab\Validator\Collections\ErrorCollection;
 use CatLab\Validator\Collections\PropertyCollection;
+use CatLab\Validator\Exceptions\PropertyNotDefined;
 use CatLab\Validator\Requirements\Exists;
 
 class Model {
@@ -33,6 +34,9 @@ class Model {
 
 	/** @var Property[] $property */
 	private $properties;
+
+	/** @var Property[] $propertymap */
+	private $propertyMap;
 
 	/** @var ErrorCollection $errors */
 	private $errors;
@@ -95,6 +99,60 @@ class Model {
 			$property->setErrors ($this->errors);
 		}
 
+		$this->propertyMap[$property->getName()] = $property;
+
+		return $this;
+	}
+
+	/**
+	 * @param $name
+	 * @return Property
+	 * @throws PropertyNotDefined
+	 */
+	public function getProperty($name)
+	{
+		if (!isset ($this->propertyMap[$name])) {
+			throw new PropertyNotDefined("Property with name {$name} is not defined.");
+		}
+
+		return $this->propertyMap[$name];
+	}
+
+	/**
+	 * Force an Equals check on a property value
+	 * @param $property
+	 * @param $value
+	 * @return $this
+	 */
+	public function setValue($property, $value)
+	{
+		$property = $this->getProperty($property);
+		$property->setValue($value);
+
+		return $this;
+	}
+
+	/**
+	 * @param $values
+	 * @return $this
+	 */
+	public function setValues($values)
+	{
+		foreach ($values as $k => $v) {
+			$this->setValue($k, $v);
+		}
+		return $this;
+	}
+
+	/**
+	 * Clear values
+	 * @return $this
+	 */
+	public function clearValues()
+	{
+		foreach ($this->properties as $property) {
+			$property->clearValue();
+		}
 		return $this;
 	}
 
@@ -204,5 +262,6 @@ class Model {
 	public function setPrefix ($prefix)
 	{
 		$this->prefix = $prefix;
+		return $this;
 	}
 }

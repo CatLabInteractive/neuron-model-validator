@@ -2,7 +2,10 @@
 
 namespace CatLab\Validator\Exceptions;
 
-class ModelNotDefined
-	extends \Exception {
+/**
+ * Class ModelNotDefined
+ * @package CatLab\Validator\Exceptions
+ */
+class ModelNotDefined extends ValidatorException {
 
 }

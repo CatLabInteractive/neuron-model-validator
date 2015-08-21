@@ -3,9 +3,10 @@
 namespace CatLab\Validator\Exceptions;
 
 /**
- * Class ModelAlreadyDefined
+ * Class ValidatorException
  * @package CatLab\Validator\Exceptions
  */
-class ModelAlreadyDefined extends \Exception {
+class ValidatorException extends \Exception
+{
 
 }

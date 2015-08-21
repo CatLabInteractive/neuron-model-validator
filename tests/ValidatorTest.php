@@ -196,4 +196,105 @@ class ValidatorTest
 		$this->assertTrue ($validator->validate ('test', $data));
 	}
 
+	public function testWithValuesCorrect ()
+	{
+		$validator = new Validator();
+
+		$model = Model::make(
+			'ModelWithValues',
+			array(
+				'id' => 'required|string',
+				'name' => 'required|string',
+				'value1' => 'required|string'
+			)
+		);
+
+		$validator->addModel($model);
+
+		$model->setValue('id', 15);
+		$model->setValue('name', 'Thijs');
+		$model->setValue('value1', 'woop');
+
+		$data = array(
+			'id' => 15,
+			'name' => 'Thijs',
+			'value1' => 'woop'
+		);
+
+		$this->assertTrue ($validator->validate ('ModelWithValues', $data));
+	}
+
+	public function testWithValuesIncorrect ()
+	{
+		$validator = new Validator();
+
+		$model = Model::make(
+			'ModelWithValues',
+			array(
+				'id' => 'required|string',
+				'name' => 'required|string',
+				'value1' => 'required|string'
+			)
+		);
+
+		$validator->addModel($model);
+
+		$model->setValue('id', 15);
+		$model->setValue('name', 'Thijs');
+		$model->setValue('value1', 'woop');
+
+		$data = array(
+			'id' => 16,
+			'name' => 'Tim',
+			'value1' => 'flow'
+		);
+
+		$this->assertFalse ($validator->validate ('ModelWithValues', $data));
+	}
+
+	public function testValueClear ()
+	{
+		$validator = new Validator();
+
+		$model = Model::make(
+			'ModelWithValues',
+			array(
+				'id' => 'required|string',
+				'name' => 'required|string',
+				'value1' => 'required|string'
+			)
+		);
+
+		$validator->addModel($model);
+
+		$model->setValues(array(
+			'id' => 15,
+			'name' => 'Thijs',
+			'value1' => 'woop'
+		));
+
+		$data = array(
+			'id' => 15,
+			'name' => 'Thijs',
+			'value1' => 'woop'
+		);
+
+		$this->assertTrue ($validator->validate ('ModelWithValues', $data));
+
+		$data2 = array (
+			'id' => 16,
+			'name' => 'Tim',
+			'value1' => 'woop'
+		);
+
+		// Data has changed, this should fail.
+		$this->assertFalse ($validator->validate ('ModelWithValues', $data2));
+
+		// Clear values
+		$model->clearValues();
+
+		// All values are gone, this one should succeed
+		$this->assertTrue ($validator->validate ('ModelWithValues', $data2));
+	}
+
 }

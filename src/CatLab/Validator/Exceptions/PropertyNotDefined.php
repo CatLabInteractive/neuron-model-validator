@@ -3,9 +3,10 @@
 namespace CatLab\Validator\Exceptions;
 
 /**
- * Class ModelAlreadyDefined
+ * Class PropertyNotDefined
  * @package CatLab\Validator\Exceptions
  */
-class ModelAlreadyDefined extends \Exception {
+class PropertyNotDefined extends ValidatorException
+{
 
 }

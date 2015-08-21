@@ -20,19 +20,19 @@ abstract class Requirement {
 		{
 			case 'required':
 				return new Exists ();
-			break;
 
 			case 'notempty':
 				return new NotEmpty ();
-			break;
 
 			case 'numeric':
 				return new IsType ('numeric');
-			break;
+
+			case 'bool':
+			case 'boolean':
+				return new IsType('boolean');
 
 			case 'string':
 				return new IsType ('string');
-			break;
 
 			case 'min':
 				if (!isset ($parts[1]) || is_numeric ($parts[1]))
@@ -41,7 +41,6 @@ abstract class Requirement {
 				}
 
 				return new IsMin ($parts[1]);
-			break;
 
 			case 'max':
 				if (!isset ($parts[1]) || is_numeric ($parts[1]))
@@ -50,11 +49,9 @@ abstract class Requirement {
 				}
 
 				return new IsMax ($parts[1]);
-			break;
 
 			default:
 				throw new UnsupportedFilter ("Filter " . $parts[0] . " is not supported.");
-			break;
 		}
 	}
 
