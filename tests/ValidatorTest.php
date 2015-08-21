@@ -5,6 +5,7 @@ namespace CatLab\Validator\Tests;
 use CatLab\Validator\Models\Model;
 use CatLab\Validator\Models\ModelProperty;
 use CatLab\Validator\Models\Property;
+use CatLab\Validator\PHPUnit\IsValidModel;
 use CatLab\Validator\Requirements\Exists;
 use CatLab\Validator\Requirements\IsType;
 use CatLab\Validator\Requirements\NotEmpty;
@@ -295,6 +296,26 @@ class ValidatorTest
 
 		// All values are gone, this one should succeed
 		$this->assertTrue ($validator->validate ('ModelWithValues', $data2));
+	}
+
+	public function testPHPUnitAssertion()
+	{
+		$model = Model::make(
+			'ModelWithValues',
+			array(
+				'id' => 'required|string',
+				'name' => 'required|string',
+				'value1' => 'required|string'
+			)
+		);
+
+		$data = array(
+			'id' => 'I am a string',
+			'name' => 'My name is Paul',
+			'value1' => 'I\'m very happy here'
+		);
+
+		$this->assertThat($data, new IsValidModel($model));
 	}
 
 }
