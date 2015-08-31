@@ -1,9 +1,9 @@
 {
-  "name": "catlabinteractive/validator",
+  "name": "catlabinteractive/neuron-model-validator",
   "type": "library",
-  "description": "A php input validator that can handle Swagger V1 specs.",
+  "description": "A php input model that can handle Swagger V1 specs.",
   "keywords": ["framework"],
-  "homepage":"http://github.com/catlabinteractive/validator",
+  "homepage":"http://github.com/catlabinteractive/neuron-model-validator",
   "license": "MIT",
   "authors" : [
 	{
