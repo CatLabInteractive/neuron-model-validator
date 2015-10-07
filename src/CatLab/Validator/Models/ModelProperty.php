@@ -33,6 +33,22 @@ class ModelProperty
 		$this->model->setErrors ($errors);
 	}
 
+	/**
+	 * @param mixed $values
+	 * @return Property
+	 */
+	public function setValue($values)
+	{
+		// Check if we already have a value
+		if (!is_array($values)) {
+			throw new \InvalidArgumentException("A model property should always have an array of values set.");
+		}
+
+		$this->model->setValues($values);
+
+		return $this;
+	}
+
 	public function validate (Model $model, $data)
 	{
 		// First validate the base
