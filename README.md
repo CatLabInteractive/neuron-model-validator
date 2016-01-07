@@ -90,7 +90,7 @@ $model = Model::make(
         'id' => 'required|int',
         'collection' => array (
             'count' => 'int|required',
-            'items[]?' => 'int'
+            'items[]' => 'int'
         )
     )
 );
