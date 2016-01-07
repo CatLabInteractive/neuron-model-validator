@@ -9,6 +9,8 @@
 namespace CatLab\Validator\Models;
 
 use CatLab\Validator\Collections\ErrorCollection;
+use CatLab\Validator\Requirements\IsType;
+use Traversable;
 
 class ArrayProperty
 	extends Property {
@@ -20,6 +22,9 @@ class ArrayProperty
 	{
 		$this->childProperty = $childType;
 		parent::__construct ($name);
+
+        // Must be traversable
+        $this->addRequirement(new IsType(IsType::TYPE_ARRAY));
 	}
 
 	public function setErrors (ErrorCollection $errors)
@@ -38,10 +43,8 @@ class ArrayProperty
 		if (isset ($data) && isset ($this->childProperty)) {
 
 			$okay = true;
-			foreach ($data as $v)
-			{
-				if (!$this->childProperty->validate ($model, $v))
-				{
+			foreach ($data as $v) {
+				if (!$this->childProperty->validate ($model, $v)) {
 					$okay = false;
 				}
 			}

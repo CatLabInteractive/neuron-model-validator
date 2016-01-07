@@ -386,4 +386,286 @@ class ValidatorTest
 		$this->assertFalse($validator->validate('DateTimeModel', $data));
 	}
 
+	/**
+	 * @test
+	 */
+	public function testArray()
+	{
+		$validator = new Validator();
+
+		$model = Model::make(
+			'ArrayModel',
+			array(
+				'id' => 'required|int',
+				'collection' => array(
+					'count' => 'int|required',
+					'items[]' => array(
+						'id' => 'int|required',
+						'name' => 'string'
+					)
+				)
+			)
+		);
+
+		$validator->addModel($model);
+
+		$correctData = array(
+			'id' => 1,
+			'collection' => array(
+				'count' => 2,
+				'items' => array(
+					array(
+						'id' => 15,
+						'name' => 'Foo'
+					),
+
+					array(
+						'id' => 16,
+						'name' => 'Bar'
+					)
+				)
+			)
+		);
+
+		$this->assertTrue($validator->validate('ArrayModel', $correctData));
+
+        $incorrectData = array(
+            'id' => 1,
+            'collection' => array(
+                'count' => 2,
+                'items' => array(
+                    array(
+                        'name' => 'Foo'
+                    ),
+
+                    array(
+                        'id' => 16,
+                        'name' => 'Bar'
+                    )
+                )
+            )
+        );
+
+        $this->assertFalse($validator->validate('ArrayModel', $incorrectData));
+	}
+
+	/**
+	 * @test
+	 */
+	public function testArrayWithValues()
+	{
+		$validator = new Validator();
+
+		$model = Model::make(
+			'ArrayModel',
+			array(
+				'id' => 'required|int',
+				'collection' => array(
+					'count' => 'int|required',
+					'items[]' => array(
+						'id' => 'int|required',
+						'name' => 'string'
+					)
+				)
+			)
+		);
+
+		$validator->addModel($model);
+
+		$correctData = array(
+			'id' => 1,
+			'collection' => array(
+				'count' => 2,
+				'items' => array(
+					array(
+						'id' => 15,
+						'name' => 'Foo'
+					),
+
+					array(
+						'id' => 16,
+						'name' => 'Bar'
+					)
+				)
+			)
+		);
+
+		// Set values
+		$model->setValues($correctData);
+
+		$this->assertTrue($validator->validate('ArrayModel', $correctData));
+
+		$incorrectData = array(
+			'id' => 1,
+			'collection' => array(
+				'count' => 2,
+				'items' => array(
+					array(
+						'id' => 99,
+						'name' => 'Where'
+					),
+
+					array(
+						'id' => 98,
+						'name' => 'Is your god now?'
+					)
+				)
+			)
+		);
+
+		$this->assertFalse($validator->validate('ArrayModel', $incorrectData));
+	}
+
+    /**
+     * @test
+     */
+    public function testOptionalArray()
+    {
+        $validator = new Validator();
+
+        $model = Model::make(
+            'ArrayModel',
+            array(
+                'id' => 'required|int',
+                'collection' => array(
+                    'count' => 'int|required',
+                    'items[]?' => array(
+                        'id' => 'int|required',
+                        'name' => 'string'
+                    )
+                )
+            )
+        );
+
+        $validator->addModel($model);
+
+        $correctData = array(
+            'id' => 1,
+            'collection' => array(
+                'count' => 2,
+                'items' => array(
+                    array(
+                        'id' => 15,
+                        'name' => 'Foo'
+                    ),
+
+                    array(
+                        'id' => 16,
+                        'name' => 'Bar'
+                    )
+                )
+            )
+        );
+
+        $this->assertTrue($validator->validate('ArrayModel', $correctData));
+
+        $correct2Data = array(
+            'id' => 1,
+            'collection' => array(
+                'count' => 2
+            )
+        );
+
+        $this->assertTrue($validator->validate('ArrayModel', $correct2Data));
+
+        $incorrectData = array(
+            'id' => 1,
+            'collection' => array(
+                'count' => 2,
+                'items' => array(
+                    array(
+                        'name' => 'Foo'
+                    ),
+
+                    array(
+                        'id' => 16,
+                        'name' => 'Bar'
+                    )
+                )
+            )
+        );
+
+        $this->assertFalse($validator->validate('ArrayModel', $incorrectData));
+    }
+
+    /**
+     * @test
+     */
+    public function testSimpleArray()
+    {
+        $validator = new Validator();
+
+        $model = Model::make(
+            'ArrayModel',
+            array(
+                'id' => 'required|int',
+                'collection' => array(
+                    'count' => 'int|required',
+                    'items[]' => 'int'
+                )
+            )
+        );
+
+        $validator->addModel($model);
+
+        $correctData = array(
+            'id' => 1,
+            'collection' => array(
+                'count' => 2,
+                'items' => array(1, 2, 3)
+            )
+        );
+
+        $this->assertTrue($validator->validate('ArrayModel', $correctData));
+
+        $incorrectData = array(
+            'id' => 1,
+            'collection' => array(
+                'count' => 2
+            )
+        );
+
+        $this->assertFalse($validator->validate('ArrayModel', $incorrectData));
+    }
+
+    /**
+     * @test
+     */
+    public function testSimpleOptionalArray()
+    {
+        $validator = new Validator();
+
+        $model = Model::make(
+            'ArrayModel',
+            array(
+                'id' => 'required|int',
+                'collection' => array(
+                    'count' => 'int|required',
+                    'items[]?' => 'int'
+                )
+            )
+        );
+
+        $validator->addModel($model);
+
+        $correctData = array(
+            'id' => 1,
+            'collection' => array(
+                'count' => 2,
+                'items' => array(1, 2, 3)
+            )
+        );
+
+        $this->assertTrue($validator->validate('ArrayModel', $correctData));
+
+        $incorrectData = array(
+            'id' => 1,
+            'collection' => array(
+                'count' => 2
+            )
+        );
+
+        $this->assertTrue($validator->validate('ArrayModel', $incorrectData));
+    }
+
 }

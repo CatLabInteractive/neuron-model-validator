@@ -25,14 +25,18 @@ abstract class Requirement {
 				return new NotEmpty ();
 
 			case 'numeric':
-				return new IsType ('numeric');
+				return new IsType('numeric');
+
+			case 'int':
+			case 'integer':
+				return new IsType('int');
 
 			case 'bool':
 			case 'boolean':
 				return new IsType('boolean');
 
 			case 'string':
-				return new IsType ('string');
+				return new IsType('string');
 
 			case 'datetime':
 				return new IsType('datetime');

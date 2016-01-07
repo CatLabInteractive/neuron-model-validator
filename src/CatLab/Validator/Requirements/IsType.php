@@ -3,9 +3,24 @@ namespace CatLab\Validator\Requirements;
 
 use CatLab\Validator\Models\Model;
 use CatLab\Validator\Models\Property;
+use Traversable;
 
 class IsType
 	extends Requirement {
+
+	const TYPE_ARRAY = 'array';
+
+    const TYPE_TEXT = 'text';
+    const TYPE_BOOL = 'bool';
+    const TYPE_STRING = 'string';
+    const TYPE_DATE = 'date';
+    const TYPE_DATETIME = 'datetime';
+    const TYPE_NUMERIC = 'numeric';
+    const TYPE_INT = 'int';
+
+    const TYPE_PASSWORD = 'password';
+    const TYPE_EMAIL = 'email';
+    const TYPE_URL = 'url';
 
 	/**
 	 * @var string
@@ -19,32 +34,32 @@ class IsType
 
 	public static function checkInput ($value, $type)
 	{
-		if ($type == 'array')
+		if ($type == self::TYPE_ARRAY)
 		{
-			return is_array ($value);
+			return is_array($value) || $value instanceof Traversable;
 		}
 
-		else if ($type == 'text')
+		else if ($type == self::TYPE_TEXT)
 		{
 			return true;
 		}
 
-		else if ($type == 'bool' || $type == 'boolean')
+		else if ($type == self::TYPE_BOOL || $type == 'boolean')
 		{
 			return $value === true || $value === false || $value === 1 || $value === 0;
 		}
 
-		elseif ($type == 'varchar' || $type == 'string')
+		elseif ($type == 'varchar' || $type == self::TYPE_STRING)
 		{
 			return self::isValidUTF8 ($value);
 		}
 
-		elseif ($type == 'password')
+		elseif ($type == self::TYPE_PASSWORD)
 		{
 			return self::isValidUTF8 ($value) && strlen ($value) > 2;
 		}
 
-		elseif ($type == 'email')
+		elseif ($type == self::TYPE_EMAIL)
 		{
 			//return (bool)preg_match("/^[_a-z0-9-]+(\.[_a-z0-9\+\-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,})$/i", $value);
 			return self::isValidUTF8 ($value) && filter_var ($value, FILTER_VALIDATE_EMAIL) ? true : false;
@@ -55,13 +70,13 @@ class IsType
 			return self::isValidUTF8 ($value) && (bool)preg_match ('/^[a-zA-Z0-9_]{3,20}$/', $value);
 		}
 
-		elseif ($type == 'date')
+		elseif ($type == self::TYPE_DATE)
 		{
 			$time = explode ('-', $value);
 			return self::isValidUTF8 ($value) && (count ($time) == 3);
 		}
 
-		elseif ($type == 'datetime')
+		elseif ($type == self::TYPE_DATETIME)
 		{
 			if (is_numeric($value)) {
 				return true;
@@ -82,7 +97,7 @@ class IsType
 			return self::isValidUTF8 ($value) && strlen ($value) == 32;
 		}
 
-		elseif ($type == 'url')
+		elseif ($type == self::TYPE_URL)
 		{
 			$regex = '/((https?:\/\/|[w]{3})?[\w-]+(\.[\w-]+)+\.?(:\d+)?(\/\S*)?)/i';
 			return self::isValidUTF8 ($value) && (bool)preg_match($regex, $value);
@@ -105,12 +120,12 @@ class IsType
 			//return (bool)preg_match("/\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i", $value);
 		}
 
-		elseif ($type == 'number' || $type == 'numeric' || $type == 'float')
+		elseif ($type == 'number' || $type == self::TYPE_NUMERIC || $type == 'float')
 		{
 			return is_numeric ($value);
 		}
 
-		elseif ($type == 'int' || $type == 'integer')
+		elseif ($type == self::TYPE_INT || $type == 'integer')
 		{
 			return is_numeric ($value) && (int)$value == $value;
 		}

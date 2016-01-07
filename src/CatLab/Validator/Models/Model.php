@@ -7,7 +7,12 @@ use CatLab\Validator\Collections\PropertyCollection;
 use CatLab\Validator\Exceptions\PropertyNotDefined;
 use CatLab\Validator\Requirements\Exists;
 
-class Model {
+/**
+ * Class Model
+ * @package CatLab\Validator\Models
+ */
+class Model
+{
 
 	/**
 	 * @param $name
@@ -199,54 +204,110 @@ class Model {
 	 */
 	private function processProperties (array $properties)
 	{
-		foreach ($properties as $propertyName => $property)
-		{
+		foreach ($properties as $propertyName => $property) {
 			$this->processProperty ($propertyName, $property);
 		}
 	}
 
+    /**
+     * Process model properties
+     * @param $name
+     * @param $property
+     */
 	private function processProperty ($name, $property)
 	{
-		// Now this could be two things, a list of filters or a submodel.
-		if (is_array ($property))
-		{
-			if (isset ($property[0]))
-			{
-				// Property name is numeric; this is a filter.
-				// Make a property and continue.
-				$this->addProperty (Property::make ($name, $property));
-			}
-
-			else {
-
-				// Is this model optional?
-				if (substr ($name, -1) === '?')
-				{
-					$name = substr ($name, 0, -1);
-
-					$prefix = $this->getPrefix () . $name . '.';
-
-					$model = self::make ($name, $property, $prefix);
-					$prop = new ModelProperty ($model);
-				}
-				else {
-
-					$prefix = $this->getPrefix () . $name . '.';
-
-					$model = self::make ($name, $property, $prefix);
-
-					$prop = new ModelProperty ($model);
-					$prop->addRequirement (new Exists ());
-				}
-
-				$this->addProperty ($prop);
-			}
-		}
-
-		else {
-			$this->addProperty (Property::make ($name, $property));
-		}
+		$this->addProperty($this->getPropertyFromInput($name, $property));
 	}
+
+    /**
+     * @param $name
+     * @param $property
+     * @return Property
+     */
+    private function getPropertyFromInput($name, $property)
+    {
+        // Is this property an ArrayProperty?
+        if (
+            substr($name, -2) === '[]' ||
+            substr($name, -3) === '[]?'
+        ) {
+            return $this->getArrayPropertyFromInput($name, $property);
+        }
+
+        // Now this could be two things, a list of filters or a submodel.
+        else if (is_array($property)) {
+
+            // If plain array, (not assoc), this is a list of filters(
+            if (isset($property[0])) {
+                // Property name is numeric; this is a filter.
+                // Make a property and continue.
+                return Property::make($name, $property);
+            }
+
+            // If a map, this is a list of properties
+            else {
+                // Is this model optional or required?
+                $required = true;
+                if (substr ($name, -1) === '?')
+                {
+                    $name = substr ($name, 0, -1);
+                    $required = false;
+                }
+
+                // Create a model property (with a nice prefix)
+                $prefix = $this->getPrefix() . $name . '.';
+
+                // Make the model
+                $model = self::make($name, $property, $prefix);
+
+                // Make the model property
+                $prop = new ModelProperty($model);
+
+                // Remember when we checked for the "?"
+                if ($required) {
+                    $prop->addRequirement(new Exists());
+                }
+
+                // Return the model property
+                return $prop;
+            }
+        }
+
+        // Very simple string property (= list of filters)
+        else {
+            return Property::make($name, $property);
+        }
+    }
+
+    /**
+     * @param string $name
+     * @param mixed
+     * @return ArrayProperty
+     */
+    private function getArrayPropertyFromInput($name, $property)
+    {
+        // Is this model optional or required?
+        $required = true;
+        if (substr ($name, -1) === '?')
+        {
+            $name = substr ($name, 0, -1);
+            $required = false;
+        }
+
+        $name = substr($name, 0, -2);
+
+        // The child property is just the base property without the []
+        $childProperty = $this->getPropertyFromInput($name, $property);
+
+        // Make a property.
+        $property = new ArrayProperty($name, $childProperty);
+
+        if ($required) {
+            $property->addRequirement(new Exists());
+        }
+
+        return $property;
+    }
 
 	/**
 	 * @return string
@@ -258,6 +319,7 @@ class Model {
 
 	/**
 	 * @param string $prefix
+     * @return Model
 	 */
 	public function setPrefix ($prefix)
 	{
