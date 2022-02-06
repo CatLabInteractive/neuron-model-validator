@@ -1,92 +1,96 @@
 <?php
+
 namespace CatLab\Validator\Models;
 
 use CatLab\Validator\Requirements\Requirement;
 
-class Error {
+class Error extends \Neuron\Models\Error
+{
 
-	/** @var Property $property */
-	private $property;
+    /** @var Property $property */
+    private $property;
 
-	/** @var Requirement $requirement */
-	private $requirement;
+    /** @var Requirement $requirement */
+    private $requirement;
 
-	/** @var Model $model */
-	private $model;
+    /** @var Model $model */
+    private $model;
 
-	public function __construct (Model $model, Property $property, Requirement $requirement)
-	{
-		$this->setModel ($model);
-		$this->setProperty ($property);
-		$this->setRequirement ($requirement);
-	}
+    public function __construct(Model $model, Property $property, Requirement $requirement)
+    {
+        $this->setModel($model);
+        $this->setProperty($property);
+        $this->setRequirement($requirement);
 
-	/**
-	 * @return Property
-	 */
-	public function getProperty ()
-	{
-		return $this->property;
-	}
+        parent::__construct($this->requirement->getError($this->getModel(), $this->getProperty()));
+    }
 
-	/**
-	 * @param Property $property
-	 * @return $this
-	 */
-	private function setProperty ($property)
-	{
-		$this->property = $property;
-		return $this;
-	}
+    /**
+     * @return Property
+     */
+    public function getProperty()
+    {
+        return $this->property;
+    }
 
-	/**
-	 * @return Requirement
-	 */
-	public function getRequirement ()
-	{
-		return $this->requirement;
-	}
+    /**
+     * @param Property $property
+     * @return $this
+     */
+    private function setProperty($property)
+    {
+        $this->property = $property;
+        return $this;
+    }
 
-	/**
-	 * @param Requirement $requirement
-	 * @return $this
-	 */
-	public function setRequirement ($requirement)
-	{
-		$this->requirement = $requirement;
-		return $this;
-	}
+    /**
+     * @return Requirement
+     */
+    public function getRequirement()
+    {
+        return $this->requirement;
+    }
 
-	/**
-	 * @return Model
-	 */
-	public function getModel ()
-	{
-		return $this->model;
-	}
+    /**
+     * @param Requirement $requirement
+     * @return $this
+     */
+    public function setRequirement($requirement)
+    {
+        $this->requirement = $requirement;
+        return $this;
+    }
 
-	/**
-	 * @param Model $model
-	 */
-	public function setModel ($model)
-	{
-		$this->model = $model;
-	}
+    /**
+     * @return Model
+     */
+    public function getModel()
+    {
+        return $this->model;
+    }
 
-	/**
-	 * @return string
-	 */
-	public function getError ()
-	{
-		return $this->requirement->getError ($this->getModel (), $this->getProperty ());
-	}
+    /**
+     * @param Model $model
+     */
+    public function setModel($model)
+    {
+        $this->model = $model;
+    }
 
-	/**
-	 * @return string
-	 */
-	public function __toString ()
-	{
-		return $this->getError ();
-	}
+    /**
+     * @return string
+     */
+    public function getError()
+    {
+        return $this->requirement->getError($this->getModel(), $this->getProperty());
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->getError();
+    }
 
 }

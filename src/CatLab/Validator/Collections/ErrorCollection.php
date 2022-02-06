@@ -1,35 +1,28 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: daedeloth
- * Date: 11/01/15
- * Time: 15:43
- */
 
 namespace CatLab\Validator\Collections;
 
+/**
+ *
+ */
+class ErrorCollection extends \Neuron\Collections\ErrorCollection
+{
+    /**
+     * Get all errors that are related to a given property.
+     * @param $name
+     * @return array|ErrorCollection
+     */
+    public function property($name)
+    {
+        $collection = new self ();
 
-class ErrorCollection
-	extends Collection {
+        foreach ($this as $error) {
+            if ($error->getProperty()->getName() == $name) {
+                $collection[] = $error;
+            }
+        }
 
-	/**
-	 * Get all errors that are related to a given property.
-	 * @param $name
-	 * @return array|ErrorCollection
-	 */
-	public function property ($name)
-	{
-		$collection = new self ();
-
-		foreach ($this as $error)
-		{
-			if ($error->getProperty ()->getName () == $name)
-			{
-				$collection[] = $error;
-			}
-		}
-
-		return $collection;
-	}
+        return $collection;
+    }
 
 }
